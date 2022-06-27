@@ -1,9 +1,7 @@
-/*
-    on button press
-        trigger event listener
-            determine button pressed
-            display value
-*/
+const displayStorage = {
+    storedValue: 0,
+    operatorPress: ""
+};
 
 initButtons();
 
@@ -18,10 +16,32 @@ function initButtons() {
 
 }
 
+
+/*
+    if digit
+        add to display
+    else if operator
+        store current display value
+        determine which operator press
+    else if clear
+        clear display and stored display values
+*/
 function changeDisplay(buttonPress) {
     const display = document.querySelector("#display");
 
-    display.textContent = buttonPress;
+    if(buttonPress >= "0" && buttonPress <= "9"){
+        if(display.textContent == "0"){
+            display.textContent = buttonPress;
+        }
+        else{
+            display.textContent += buttonPress;
+        }
+    }
+    else if(buttonPress == "AC"){
+        display.textContent = "0";
+        displayStorage.storedValue = 0;
+        displayStorage.operatorPress = "";
+    }
 }
 
 function add(a, b) {
