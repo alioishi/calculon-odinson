@@ -17,28 +17,19 @@ function initButtons() {
 
 }
 
-/*
-    if digit
-        add to display
-    else if operator
-        store current display value
-        determine which operator press
-    else if clear
-        clear display and stored display values
-*/
 function changeDisplay(buttonPress) {
     const display = document.querySelector("#display");
 
-    if(buttonPress >= "0" && buttonPress <= "9"){
-        addDigitToDisplay(display, buttonPress);
+    if(buttonPress >= "0" && buttonPress <= "9" || buttonPress == "."){
+        addToDisplay(display, buttonPress);
     }
     else if(buttonPress == "AC"){
         clearDisplay(display);
     }
 }
 
-function addDigitToDisplay(display, buttonPress) {
-    if(display.textContent == "0"){
+function addToDisplay(display, buttonPress) {
+    if(display.textContent == "0" && buttonPress != "."){
         display.textContent = buttonPress;
     }
     else{
@@ -51,6 +42,7 @@ function clearDisplay(display){
     displayStorage.storedValue = 0;
     displayStorage.operatorPress = "";
 }
+
 
 function add(a, b) {
     return a + b;
