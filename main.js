@@ -26,11 +26,17 @@ function changeDisplay(buttonPress) {
     else if(buttonPress == "AC"){
         clearDisplay(display);
     }
+    else{
+        processOperator(display, buttonPress);
+    }
 }
 
 function addToDisplay(display, buttonPress) {
     if(display.textContent == "0" && buttonPress != "."){
         display.textContent = buttonPress;
+    }
+    else if(display.textContent == "-0" && buttonPress != "."){
+        display.textContent = "-" + buttonPress;
     }
     else{
         display.textContent += buttonPress;
@@ -43,6 +49,14 @@ function clearDisplay(display){
     displayStorage.operatorPress = "";
 }
 
+function processOperator(display, buttonPress){
+    if(buttonPress == "%"){
+        display.textContent = String(display.textContent / 100);
+    }
+    else if(buttonPress == "±"){
+        display.textContent = (display.textContent == "0") ? "-0" : String(-display.textContent);
+    }
+}
 
 function add(a, b) {
     return a + b;
