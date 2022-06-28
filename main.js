@@ -1,5 +1,6 @@
+// stores values while waiting for a second operand
 const displayStorage = {
-    storedValue: 0,
+    storedValue: 0, 
     operatorPress: ""
 };
 
@@ -16,7 +17,6 @@ function initButtons() {
 
 }
 
-
 /*
     if digit
         add to display
@@ -30,18 +30,26 @@ function changeDisplay(buttonPress) {
     const display = document.querySelector("#display");
 
     if(buttonPress >= "0" && buttonPress <= "9"){
-        if(display.textContent == "0"){
-            display.textContent = buttonPress;
-        }
-        else{
-            display.textContent += buttonPress;
-        }
+        addDigitToDisplay(display, buttonPress);
     }
     else if(buttonPress == "AC"){
-        display.textContent = "0";
-        displayStorage.storedValue = 0;
-        displayStorage.operatorPress = "";
+        clearDisplay(display);
     }
+}
+
+function addDigitToDisplay(display, buttonPress) {
+    if(display.textContent == "0"){
+        display.textContent = buttonPress;
+    }
+    else{
+        display.textContent += buttonPress;
+    }
+}
+
+function clearDisplay(display){
+    display.textContent = "0";
+    displayStorage.storedValue = 0;
+    displayStorage.operatorPress = "";
 }
 
 function add(a, b) {
