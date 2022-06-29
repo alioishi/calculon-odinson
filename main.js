@@ -24,11 +24,8 @@ function changeDisplay(buttonPress) {
     if(buttonPress >= "0" && buttonPress <= "9" || buttonPress == "." || buttonPress == "%" ||buttonPress == "±"){
         modifyCurrentValue(display, buttonPress);
     }
-    else if(buttonPress == "AC"){
-        clearAll(display);
-    }
     else if(buttonPress == "C"){
-        clearCurrentDisplay(display);
+        clearDisplay(display);
     }
     else{
         processOperator(display, buttonPress);
@@ -64,18 +61,25 @@ function modifyCurrentValue(display, buttonPress) {
     displayStorage.isBinaryOperatorLastPressed = false;
 }
 
+function clearDisplay(display){
+    // completely clear only if already zero or there is no operator previously pressed to allow edits
+    if(document.querySelector("#clear").textContent == "C" && 
+        display.textContent == "0" || displayStorage.storedOperator == "" || displayStorage.isBinaryOperatorLastPressedisBinaryOperatorLastPressed){
+        clearAll(display);
+    }
+    else{
+        display.textContent = "0";
+    }
+
+    displayStorage.isBinaryOperatorLastPressed = false;
+}
+
 function clearAll(display){
     display.textContent = "0";
     displayStorage.storedValue = 0;
     displayStorage.storedOperator = "";
     displayStorage.isBinaryOperatorLastPressed = false;
-}
-
-function clearCurrentDisplay(display){
-    display.textContent = "0";
-    document.querySelector("#clear").textContent = "AC"; // provides option to clear everything
-
-    displayStorage.isBinaryOperatorLastPressed = false;
+    document.querySelector("#clear").textContent = "AC"; // shows that everything is cleared
 }
 
 function processOperator(display, buttonPress){
