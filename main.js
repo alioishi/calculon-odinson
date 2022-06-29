@@ -38,20 +38,19 @@ function changeDisplay(buttonPress) {
 function modifyCurrentValue(display, buttonPress) {
     document.querySelector("#clear").textContent = "C"; // allows for edits of current value
     
-    if(buttonPress == "%"){
+    if(buttonPress == "%"){ // percent is placed first because it isnt affect by 0's edge cases
         display.textContent = String(display.textContent / 100);
     }
-    else if(displayStorage.isBinaryOperatorLastPressed){ // replacement of display value after a value is pressed
-        display.textContent = (buttonPress == ".") ? "0." : // addresses edge cases 
+    else if(displayStorage.isBinaryOperatorLastPressed){ // replacement of display value after an operator, followed by a value is pressed
+        display.textContent = (buttonPress == ".") ? "0." : // addresses edge cases for 0
                                 (buttonPress == "±") ? "-0" : 
                                 buttonPress;
-        displayStorage.isBinaryOperatorLastPressed = false;
     }
     else if(buttonPress == "±"){
         display.textContent = display.textContent.includes("-") ? display.textContent.replace("-", "") : "-" + display.textContent;
     }
     else if(buttonPress == "."){
-        if(!display.textContent.includes(".")){
+        if(!display.textContent.includes(".")){ // prevents multiple decimals. placed inside else if so that a decimal does not fall into the else
             display.textContent += buttonPress; 
         }   
     }
@@ -61,34 +60,44 @@ function modifyCurrentValue(display, buttonPress) {
     else{
         display.textContent += buttonPress;
     }
+
+    displayStorage.isBinaryOperatorLastPressed = false;
 }
 
 function clearAll(display){
     display.textContent = "0";
     displayStorage.storedValue = 0;
     displayStorage.storedOperator = "";
+    displayStorage.isBinaryOperatorLastPressed = false;
 }
 
 function clearCurrentDisplay(display){
     display.textContent = "0";
     document.querySelector("#clear").textContent = "AC"; // provides option to clear everything
+
+    displayStorage.isBinaryOperatorLastPressed = false;
 }
 
 function processOperator(display, buttonPress){
     document.querySelector("#clear").textContent = "C"; // allows for edits of current value
     
-    // allows for multiple presses of binary operators without requiring an equal sign press each time
-    if(displayStorage.storedOperator){
+    // allows for performing multiple operations without pressing = each time
+    // also allows for changing a chosen operation
+    if(determineBinaryOperator(displayStorage.storedOperator) && !displayStorage.isBinaryOperatorLastPressed){ 
         display.textContent = String(operate(determineBinaryOperator(displayStorage.storedOperator), 
                                         displayStorage.storedValue, display.textContent));
+        
     }
     displayStorage.storedValue = display.textContent;
-    displayStorage.storedOperator = (buttonPress == "=") ? "" : buttonPress; //set empty if equal pressed so that repeatedly pressing = does not repeat the operation
-    displayStorage.isBinaryOperatorLastPressed = (buttonPress != "=");
+    // prevents repeatedly pressing = from causing an operation to evaluate repeatedly without pressing other operators
+    displayStorage.storedOperator = (buttonPress == "=") ? "" : buttonPress; 
+    displayStorage.isBinaryOperatorLastPressed = (buttonPress != "="); 
 }
 
 function add(a, b) {
-    return a + b;
+    const intA = Number(a);
+    const intB = Number(b);
+    return String(intA + intB);
 }
 
 function subtract(a, b) {
