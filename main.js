@@ -25,7 +25,10 @@ function changeDisplay(buttonPress) {
         modifyCurrentValue(display, buttonPress);
     }
     else if(buttonPress == "AC"){
-        clearDisplay(display);
+        clearAll(display);
+    }
+    else if(buttonPress == "C"){
+        clearCurrentDisplay(display);
     }
     else{
         processOperator(display, buttonPress);
@@ -33,6 +36,8 @@ function changeDisplay(buttonPress) {
 }
 
 function modifyCurrentValue(display, buttonPress) {
+    document.querySelector("#clear").textContent = "C"; // allows for edits of current value
+    
     if(buttonPress == "%"){
         display.textContent = String(display.textContent / 100);
     }
@@ -58,20 +63,27 @@ function modifyCurrentValue(display, buttonPress) {
     }
 }
 
-function clearDisplay(display){
+function clearAll(display){
     display.textContent = "0";
     displayStorage.storedValue = 0;
     displayStorage.storedOperator = "";
 }
 
+function clearCurrentDisplay(display){
+    display.textContent = "0";
+    document.querySelector("#clear").textContent = "AC"; // provides option to clear everything
+}
+
 function processOperator(display, buttonPress){
+    document.querySelector("#clear").textContent = "C"; // allows for edits of current value
+    
     // allows for multiple presses of binary operators without requiring an equal sign press each time
     if(displayStorage.storedOperator){
         display.textContent = String(operate(determineBinaryOperator(displayStorage.storedOperator), 
                                         displayStorage.storedValue, display.textContent));
     }
     displayStorage.storedValue = display.textContent;
-    displayStorage.storedOperator = (buttonPress == "=") ? "" : buttonPress;
+    displayStorage.storedOperator = (buttonPress == "=") ? "" : buttonPress; //set empty if equal pressed so that repeatedly pressing = does not repeat the operation
     displayStorage.isBinaryOperatorLastPressed = (buttonPress != "=");
 }
 
