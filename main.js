@@ -38,10 +38,13 @@ function modifyCurrentValue(display, buttonPress) {
     if(buttonPress == "%"){ // percent is placed first because it isnt affect by 0's edge cases
         display.textContent = String(display.textContent / 100);
     }
-    else if(displayStorage.isBinaryOperatorLastPressed){ // replacement of display value after an operator, followed by a value is pressed
+    else if(displayStorage.isBinaryOperatorLastPressed || displayStorage.storedOperator  == "="){ // replacement of display value after an operator, followed by a value is pressed
         display.textContent = (buttonPress == ".") ? "0." : // addresses edge cases for 0
                                 (buttonPress == "±") ? "-0" : 
                                 buttonPress;
+        if(displayStorage.storedOperator == "="){ // clear once a number is pressed after equal is pressed
+            displayStorage.storedOperator = "";
+        }
     }
     else if(buttonPress == "±"){
         display.textContent = display.textContent.includes("-") ? display.textContent.replace("-", "") : "-" + display.textContent;
@@ -83,7 +86,9 @@ function clearAll(display){
 }
 
 function processOperator(display, buttonPress){
-    document.querySelector("#clear").textContent = "C"; // allows for edits of current value
+    if(!(buttonPress == "=" && document.querySelector("#clear").textContent == "AC")){
+        document.querySelector("#clear").textContent = "C"; // allows for edits of current value
+    }
     
     // allows for performing multiple operations without pressing = each time
     // also allows for changing a chosen operation
@@ -94,7 +99,7 @@ function processOperator(display, buttonPress){
     }
     displayStorage.storedValue = display.textContent;
     // prevents repeatedly pressing = from causing an operation to evaluate repeatedly without pressing other operators
-    displayStorage.storedOperator = (buttonPress == "=") ? "" : buttonPress; 
+    displayStorage.storedOperator = buttonPress; 
     displayStorage.isBinaryOperatorLastPressed = (buttonPress != "="); 
 }
 
